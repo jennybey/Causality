@@ -3,10 +3,10 @@ library(bnlearn)
 library(causaleffect)
 library(gRain)
 
-datos <-read.csv("~/Desktop/Tesis doc/Bases/Covid_CDMX.csv", header = TRUE)
+datos <-read.csv("file", header = TRUE)
 
 datos_ <- datos
-red_carac <-read.csv("~/Desktop/Tesis doc/Salidas redes/Covid_CDMX_pr.csv",header = TRUE)
+red_carac <-read.csv("file",header = TRUE)
 
 red_carac<-as.matrix.noquote(red_carac)
 datos_ <- as.data.frame(datos_[,unique(red_carac)])  
@@ -20,8 +20,8 @@ for(i in 1:length(datos_[1,])){
 }
 base <- datos
 
-causa <-  "sex" 
-efecto <- "dead"
+causa <-  "variable cause" 
+efecto <- "variable effect"
 intervencion <- unique(base[causa])[1,]
 
 
@@ -50,15 +50,6 @@ if (length(causa_red) == 0) {
 roriginal <- graph_from_data_frame(red_arcos)
 rcausal <- graph_from_data_frame(red_arcos_causal)
 pal2 <- rainbow(5, alpha = .2)
-# plot(
-#   roriginal,
-#   vertex.size = 20,
-#   edge.arrow.size = .4,
-#   vertex.frame.color = "skyblue",
-#   vertex.label.cex = 1,
-#   vertex.color = "skyblue"
-# )
-
 
 grafo <- graph.data.frame(red_arcos,directed = T)
 grafo_sc <- simplify(grafo,remove.multiple = T, remove.loops = T)
@@ -143,7 +134,7 @@ nodos_causales <- c()
 for (p in 1:length(prob_cond[, 1])) {
   p_colapsar <- unlist(strsplit(prob_cond[p, 1], split = ""))
   
-  #Busca el dado que en la expresion esta el condicionante y la condicion
+  #Busca el | que en la expresion esta el condicionante y la condicion
   busca_condicion <- which(p_colapsar == "|")
   if (length(busca_condicion) == 0) {
     busca_condicion <- 0
@@ -205,7 +196,7 @@ plot(
  edge.arrow.size = .3,
  main = "Red Causal"
 )
-#esto lo meti a ver que sale jaja
+
 rcausal <- simplify(rcausal,remove.multiple = TRUE, remove.loops = FALSE)
 g <- as.directed(rcausal,"arbitrary")
 model <-bnlearn::modelstring(as.bn(rcausal))
@@ -346,10 +337,6 @@ if(length(vector_sum) >= 1){
     }
   }
 
-  #vector_sum_1 <- nodos_a_colorear
-  #vector_sum_1 <- vector_sum_1[-which(efecto == vector_sum_1)]
-  #vector_sum_1 <- vector_sum_1[-which(causa == vector_sum_1)]
-  #vector_sum_1 <- c(RB$nodes$IQ$parents)
   vector_sum_1 <- vector_sum
 
   niveles.sum <- list()
@@ -440,5 +427,5 @@ intervencion
 
 probabilidades <- list("Efecto_" = prob_causal,propagacion.observacion,"Causa"= causa,"Valor"=intervencion)
 
-#write.csv(probabilidades,"~/Desktop/Tesis doc/Salidas probabilidades/CDMX_Sex_PR1.csv")
+write.csv(probabilidades,"file)
 
